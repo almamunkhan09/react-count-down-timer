@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export default function Header() {
+export default function CountDown() {
   const [days, setDays] = useState(0);
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);

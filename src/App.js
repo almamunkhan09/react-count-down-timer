@@ -1,9 +1,9 @@
-import Header from './Components/Header';
+import CountDown from './Components/CountDown';
 
 function App() {
   return (
     <div className="container mx-auto">
-      <Header />
+      <CountDown />
     </div>
   );
 }
