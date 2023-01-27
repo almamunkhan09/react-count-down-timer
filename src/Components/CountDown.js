@@ -137,9 +137,17 @@ export default function CountDown() {
           </button>
         </div>
       </div>
-      {seconds ? <div className="text-white"> {title}</div> : ''}
+      {seconds ? (
+        <div className=" p-4 flex justify-centertext-white"> {title}</div>
+      ) : (
+        ''
+      )}
 
-      {isFinished ? <div className="text-white">Time Finished</div> : ''}
+      {isFinished ? (
+        <div className="flex justify-center p-4 text-white">Time Finished</div>
+      ) : (
+        ''
+      )}
     </>
   );
 }
