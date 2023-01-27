@@ -1,24 +1,31 @@
 import { useEffect, useState } from 'react';
 
 export default function Header() {
-  // const [days, setDays] = useState(0);
-  // const [hours, setHours] = useState(0);
-  // const [minutes, setMinutes] = useState(0);
-  // const [sec, setSec] = useState(0);
+  const [days, setDays] = useState(0);
+  const [hours, setHours] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
   const [timeDiff, setTimeDiff] = useState(0);
   const [deadline, setDeadline] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
+  const [title, setTitle] = useState('');
 
   useEffect(() => {
+    if (timeDiff < 0) setIsFinished(true);
+
     const timerInt =
       timeDiff > 0 &&
       setInterval(() => {
-        setTimeDiff(() => timeDiff - 1);
-        if (
-          Math.ceil(deadline / 1000) === Math.ceil(new Date().getTime() / 1000)
-        ) {
-          setIsFinished(true);
-        }
+        console.log(timeDiff);
+        setTimeDiff(() => timeDiff - 1000);
+        setSeconds(() => Math.floor((timeDiff % (1000 * 60)) / 1000));
+        setMinutes(() =>
+          Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60)),
+        );
+        setHours(() =>
+          Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        );
+        setDays(() => Math.floor(timeDiff / (1000 * 60 * 60 * 24)));
       }, 1000);
     return () => {
       clearInterval(timerInt);
@@ -30,8 +37,8 @@ export default function Header() {
   };
   const handleStart = () => {
     const milidiff = deadline - new Date().getTime();
-    const seconds = Math.floor(milidiff / 1000);
-    setTimeDiff(seconds);
+    setTimeDiff(milidiff);
+    setIsFinished(false);
   };
 
   // setSec(timeDiff % 60);
@@ -59,36 +66,62 @@ export default function Header() {
           </label>
         </div>
       </div>
+      <div className="flex justify-center">
+        <div className="mb-3 xl:w-96">
+          <label
+            htmlFor="exampleText0"
+            className="form-label inline-block mb-2 text-white font-bold"
+          >
+            Title
+          </label>
+          <input
+            onChange={(event) => setTitle(event.target.value)}
+            className="
+        form-control
+        block
+        w-full
+        px-3
+        py-1.5
+        text-base
+        font-normal
+        text-gray-700
+        bg-white bg-clip-padding
+        border border-solid border-gray-300
+        rounded
+        transition
+        ease-in-out
+        m-0
+        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
+      "
+            id="exampleText0"
+            placeholder="Set the Title "
+          />
+        </div>
+      </div>
       <div className="flex   p-5 items-center justify-center gap-5 text-white">
         <div>
           <span className="countdown font-mono text-white text-4xl">
             <span className="text-white" style={{ '--value': 15 }}>
-              {Math.floor(timeDiff / (60 * 60 * 24))}
+              {days}
             </span>
           </span>
           days
         </div>
         <div>
           <span className="countdown font-mono text-4xl">
-            <span style={{ '--value': 10 }}>
-              {' '}
-              {Math.floor((timeDiff % (60 * 60 * 24)) / (60 * 60))}
-            </span>
+            <span style={{ '--value': 10 }}> {hours}</span>
           </span>
           hours
         </div>
         <div>
           <span className="countdown font-mono text-4xl">
-            <span style={{ '--value': 24 }}>
-              {' '}
-              {Math.floor((timeDiff % (60 * 60)) / 60)}
-            </span>
+            <span style={{ '--value': 24 }}> {minutes}</span>
           </span>
           min
         </div>
         <div>
           <span className="countdown font-mono text-4xl">
-            <span style={{ '--value': 44 }}>{timeDiff % 60}</span>
+            <span style={{ '--value': 44 }}>{seconds}</span>
           </span>
           sec
         </div>
@@ -104,6 +137,7 @@ export default function Header() {
           </button>
         </div>
       </div>
+      {seconds ? <div className="text-white"> {title}</div> : ''}
 
       {isFinished ? <div className="text-white">Time Finished</div> : ''}
     </>
